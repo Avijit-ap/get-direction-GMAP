@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Get Directions</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+  <div class="bg-white p-6 rounded-lg shadow-lg max-w-md text-center">
+    <h1 class="text-2xl font-bold text-gray-800 mb-4">Get Directions</h1>
+    <p class="text-gray-600 mb-4">Enter your destination and allow location access to get directions.</p>
+    <input 
+      id="destination" 
+      type="text" 
+      placeholder="Enter destination (e.g., Kalighat Temple)" 
+      class="w-full px-4 py-2 border rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+    <button 
+      id="getDirections" 
+      class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      Get Directions
+    </button>
+  </div>
+
+  <script>
+    document.getElementById('getDirections').addEventListener('click', () => {
+      const destinationInput = document.getElementById('destination').value.trim();
+      
+      if (!destinationInput) {
+        alert('Please enter a destination.');
+        return;
+      }
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            const origin = `${latitude},${longitude}`;
+            const destination = encodeURIComponent(destinationInput); // Handle spaces and special characters
+            const url = `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=driving`;
+            window.open(url, '_blank'); // Open Google Maps in a new tab
+          },
+          (error) => {
+            alert('Unable to retrieve your location. Please enable location services.');
+          }
+        );
+      } else {
+        alert('Geolocation is not supported by your browser.');
+      }
+    });
+  </script>
+</body>
+</html>
